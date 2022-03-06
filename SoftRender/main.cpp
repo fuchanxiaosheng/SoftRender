@@ -42,17 +42,6 @@ int main()
 	TextureSampler textureSampler;
 	textureSampler.LoadDDSTexture(L"C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
 	pTextureSampler = &textureSampler;
-	/*for (int i = 0; i < pTextureSampler->height; i++)
-	{
-		for (int j = 0; j < pTextureSampler->width; j++)
-		{
-			std::cout << (int)pTextureSampler->rawData[i * pTextureSampler->width + j].r << std::endl;
-			std::cout << (int)pTextureSampler->rawData[i * pTextureSampler->width + j].g << std::endl;
-			std::cout << (int)pTextureSampler->rawData[i * pTextureSampler->width + j].b << std::endl;
-			std::cout << (int)pTextureSampler->rawData[i * pTextureSampler->width + j].a << std::endl;
-			std::cout << "========" << std::endl;
-		}
-	}*/
 	const char *const wndName = "SoftRender";
 	HINSTANCE hInstance = GetModuleHandle(nullptr);
 	WNDCLASSEX wc = { 0 };
