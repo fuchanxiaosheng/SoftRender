@@ -1,15 +1,27 @@
 #include <Windows.h>
+#include <iostream>
 
 #include "MeshLoader.h"
+#include "TextureSampler.h"
+
+TextureSampler* pTextureSampler;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
-	HDC hdc;
+	HDC hdc, hdcMem;
+	HBITMAP hBitmap;
+	int i;
 	switch (msg)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
+		hdcMem = CreateCompatibleDC(hdc);
+		hBitmap = CreateBitmap(pTextureSampler->width, pTextureSampler->height, 1, 32, pTextureSampler->rawData);
+		i = GetLastError();
+		SelectObject(hdcMem, hBitmap);
+		BitBlt(hdc, 0, 0, pTextureSampler->width, pTextureSampler->height, hdcMem, 0, 0, SRCCOPY);
+		DeleteDC(hdcMem);
 
 		EndPaint(hWnd, &ps);
 		break;
@@ -25,8 +37,22 @@ int main()
 {
 
 	MeshLoader meshLoader;
-	meshLoader.Load("C://Users//21166//Desktop//test.obj");
+	meshLoader.Load("C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//test.obj");
 
+	TextureSampler textureSampler;
+	textureSampler.LoadDDSTexture(L"C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
+	pTextureSampler = &textureSampler;
+	/*for (int i = 0; i < pTextureSampler->height; i++)
+	{
+		for (int j = 0; j < pTextureSampler->width; j++)
+		{
+			std::cout << (int)pTextureSampler->rawData[i * pTextureSampler->width + j].r << std::endl;
+			std::cout << (int)pTextureSampler->rawData[i * pTextureSampler->width + j].g << std::endl;
+			std::cout << (int)pTextureSampler->rawData[i * pTextureSampler->width + j].b << std::endl;
+			std::cout << (int)pTextureSampler->rawData[i * pTextureSampler->width + j].a << std::endl;
+			std::cout << "========" << std::endl;
+		}
+	}*/
 	const char *const wndName = "SoftRender";
 	HINSTANCE hInstance = GetModuleHandle(nullptr);
 	WNDCLASSEX wc = { 0 };

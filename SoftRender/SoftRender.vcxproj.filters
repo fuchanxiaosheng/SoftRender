@@ -47,5 +47,8 @@
     <ClCompile Include="DDSTextureLoader11.cpp">
       <Filter>extern</Filter>
     </ClCompile>
+    <ClCompile Include="TextureSampler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
