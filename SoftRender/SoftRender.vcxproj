@@ -147,15 +147,18 @@
     <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="PrimitiveConstructor.h" />
     <ClInclude Include="TextureSampler.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DDSTextureLoader11.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="PrimitiveConstructor.cpp" />
     <ClCompile Include="TextureSampler.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

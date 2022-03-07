@@ -80,5 +80,5 @@ bool MeshLoader::Load(const char* filename)
 		}
 	}
 
-
+	return true;
 }

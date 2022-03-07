@@ -8,7 +8,7 @@ public:
 	Vector3D position;
 	Vector2D texcoord;
 	Vector3D normal;
-	Vector3D tangent;
+	Vector4D tangent;
 
 	Vertex() {}
 	Vertex(Vector3D _position, Vector3D _normal, Vector3D _color, Vector2D _tex)

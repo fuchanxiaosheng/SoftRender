@@ -39,17 +39,16 @@ public:
 	Vector4D color;
 	Vector3D tangent;
 
-	PixelShaderIn operator-()
+	PixelShaderIn& operator-()
 	{
-		PixelShaderIn ret;
-		ret.texCoord = -texCoord;
-		ret.vertexPosition = -vertexPosition;
-		ret.normal = -normal;
-		ret.color = -color;
-		ret.tangent = -tangent;
-		ret.viewPosition = viewPosition;
-		ret.directionLightDirection = directionLightDirection;
-		return ret;
+		texCoord = -texCoord;
+		vertexPosition = -vertexPosition;
+		normal = -normal;
+		color = -color;
+		tangent = -tangent;
+		viewPosition = viewPosition;
+		directionLightDirection = directionLightDirection;
+		return *this;
 	}
 };
 

@@ -1,8 +1,10 @@
 #include <Windows.h>
 #include <iostream>
+#include <string>
 
 #include "MeshLoader.h"
 #include "TextureSampler.h"
+#include "Timer.h"
 
 TextureSampler* pTextureSampler;
 
@@ -37,10 +39,12 @@ int main()
 {
 
 	MeshLoader meshLoader;
-	meshLoader.Load("D://Files//CodeProject//SoftRender//SoftRender//resource//test.obj");
+	//meshLoader.Load("D://Files//CodeProject//SoftRender//SoftRender//resource//test.obj");
+	meshLoader.Load("C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//test.obj");
 
 	TextureSampler textureSampler;
-	textureSampler.LoadDDSTexture(L"D://Files//CodeProject//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
+	//textureSampler.LoadDDSTexture(L"D://Files//CodeProject//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
+	textureSampler.LoadDDSTexture(L"C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
 	pTextureSampler = &textureSampler;
 	const char *const wndName = "SoftRender";
 	HINSTANCE hInstance = GetModuleHandle(nullptr);
@@ -76,12 +80,17 @@ int main()
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 
 	MSG msg = {};
+	Timer timer;
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+		}
+		else
+		{
+			SetWindowText(hWnd, std::to_string(1.0f / timer.TimeTick()).c_str());
 		}
 		
 	}
