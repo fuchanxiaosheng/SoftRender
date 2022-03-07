@@ -36,6 +36,9 @@
     <ClInclude Include="DDSTextureLoader11.h">
       <Filter>extern</Filter>
     </ClInclude>
+    <ClInclude Include="PrimitiveConstructor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,6 +51,9 @@
       <Filter>extern</Filter>
     </ClCompile>
     <ClCompile Include="TextureSampler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveConstructor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

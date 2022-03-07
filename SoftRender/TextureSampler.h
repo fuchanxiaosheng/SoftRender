@@ -9,12 +9,12 @@ class PixelColor
 public:
 	union
 	{
-		int x;
+		int c;
 		struct
 		{
-			unsigned char r;
-			unsigned char g;
 			unsigned char b;
+			unsigned char g;
+			unsigned char r;
 			unsigned char a;
 		};
 	};

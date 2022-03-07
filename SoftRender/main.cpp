@@ -37,10 +37,10 @@ int main()
 {
 
 	MeshLoader meshLoader;
-	meshLoader.Load("C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//test.obj");
+	meshLoader.Load("D://Files//CodeProject//SoftRender//SoftRender//resource//test.obj");
 
 	TextureSampler textureSampler;
-	textureSampler.LoadDDSTexture(L"C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
+	textureSampler.LoadDDSTexture(L"D://Files//CodeProject//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
 	pTextureSampler = &textureSampler;
 	const char *const wndName = "SoftRender";
 	HINSTANCE hInstance = GetModuleHandle(nullptr);
@@ -62,9 +62,9 @@ int main()
 
 	RECT wr;
 	wr.left = 100;
-	wr.right = 1024 + wr.left;
+	wr.right = 1920 + wr.left;
 	wr.top = 100;
-	wr.bottom = 768 + wr.top;
+	wr.bottom = 1280 + wr.top;
 	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
 
 	HWND hWnd = CreateWindow(
