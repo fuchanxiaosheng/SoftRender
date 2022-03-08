@@ -1,5 +1,7 @@
 #include "Math.h"
 
+#include <cmath>
+
 Vector2D& Vector2D::operator+=(const Vector2D& v)
 {
 	return *this;
@@ -371,80 +373,152 @@ Matrix4x4 Matrix4x4::Inverse()
 
 Matrix4x4 operator*(float k, const Matrix4x4& rm)
 {
-	return Matrix4x4();
+	return rm * k;
 }
 Matrix4x4 MatrixIdentity()
 {
-	return Matrix4x4();
+	return Matrix4x4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
 }
 
 Vector4D Vec2Transform(const Vector2D& v, const Matrix4x4& m)
 {
-	return Vector4D();
+	return Vec4Transform(Vector4D(v.x, v.y, 0, 1), m);
 }
 Vector2D Vec2TransformCoord(const Vector2D& v, const Matrix4x4& m)
 {
-	return Vector2D();
+	Vector4D v4(v.x, v.y, 0, 1);
+	v4 = Vec4Transform(v4, m);
+	return Vector2D(v4.x, v4.y);
 }
 
 Vector2D Vec2TransformNormal(const Vector2D& v, const Matrix4x4& m)
 {
-	return Vector2D();
+	Vector4D v4(v.x, v.y, 0, 0);
+	v4 = Vec4Transform(v4, m);
+	return Vector2D(v4.x, v4.y);
 }
 
 Vector4D Vec3Transform(const Vector3D& v, const Matrix4x4& m)
 {
-	return Vector4D();
+	return Vec4Transform(Vector4D(v.x, v.y, v.z, 1), m);
 }
 Vector3D Vec3TransformCoord(const Vector3D& v, const Matrix4x4& m)
 {
-	return Vector3D();
+	Vector4D v4(v.x, v.y, v.z, 1);
+	v4 = Vec4Transform(v4, m);
+	return Vector3D(v4.x, v4.y, v4.z);
 }
 Vector3D Vec3TransformNormal(const Vector3D& v, const Matrix4x4& m)
 {
-	return Vector3D();
+	Vector4D v4(v.x, v.y, v.z, 0);
+	v4 = Vec4Transform(v4, m);
+	return Vector3D(v4.x, v4.y, v4.z);
 }
 
 Vector4D Vec4Transform(const Vector4D& v, const Matrix4x4& m)
 {
-	return Vector4D();
+	return Vector4D(
+		m.m[0][0] * v.x + m.m[0][1] * v.y + m.m[0][2] * v.z + m.m[0][3] * v.w,
+		m.m[1][0] * v.x + m.m[1][1] * v.y + m.m[1][2] * v.z + m.m[1][3] * v.w,
+		m.m[2][0] * v.x + m.m[2][1] * v.y + m.m[2][2] * v.z + m.m[2][3] * v.w,
+		m.m[3][0] * v.x + m.m[3][1] * v.y + m.m[3][2] * v.z + m.m[3][3] * v.w
+	);
 }
 
 Matrix4x4 MatrixLookAtLH(const Vector3D& EyePosition, const Vector3D& FocusPosition, const Vector3D& UpDirection)
 {
-	return Matrix4x4();
+	Vector3D EyeDirection = FocusPosition - EyePosition;
+
+	return MatrixLookToLH(EyePosition, EyeDirection, UpDirection);
 }
 Matrix4x4 MatrixLookToLH(const Vector3D& EyePosition, const Vector3D& EyeDirection, const Vector3D& UpDirection)
 {
-	return Matrix4x4();
+	Vector3D zaxis = EyeDirection.Normalize();
+	Vector3D xaxis = Cross(UpDirection, zaxis).Normalize();
+	Vector3D yaxis = Cross(zaxis, xaxis);
+	return Matrix4x4(
+		xaxis.x, yaxis.x, zaxis.x, 0,
+		xaxis.y, yaxis.y, zaxis.y, 0,
+		xaxis.z, yaxis.z, zaxis.z, 0,
+		(float)-Dot(xaxis, EyePosition), (float)-Dot(yaxis, EyePosition), (float)-Dot(zaxis, EyePosition), 1
+	);
 }
 
 Matrix4x4 MatrixPerspectiveFovLH(float FovAngleY, float AspectRatio, float NearZ, float FarZ)
 {
-	return Matrix4x4();
+	float cosFov = cos(0.5f * FovAngleY);
+	float sinFov = sin(0.5f * FovAngleY);
+	float h = cosFov / sinFov;
+	float w = h / AspectRatio;
+	float a = FarZ / (FarZ - NearZ);
+	float b = -a * NearZ;
+	return Matrix4x4(
+		w, 0, 0, 0,
+		0, h, 0, 0,
+		0, 0, a, 1,
+		0, 0, b, 0
+	);
 }
 
 Matrix4x4 MatrixTransformation(const Vector3D& position, const Vector3D& rotation, const Vector3D& scale)
 {
-	return Matrix4x4();
+	Matrix4x4 mTranslation = MatrixTranslation(position);
+	Matrix4x4 mScaling = MatrixScaling(scale);
+	return mTranslation;
 }
 Matrix4x4 MatrixTranslation(const Vector3D& offset)
 {
-	return Matrix4x4();
+	return Matrix4x4(
+		1.0f, 0, 0, offset.x,
+		0, 1.0f, 0, offset.y,
+		0, 0, 1.0f, offset.z,
+		0, 0, 0, 1.0f
+	);
 }
 Matrix4x4 MatrixScaling(const Vector3D& scale)
 {
-	return Matrix4x4();
+	return Matrix4x4(
+		scale.x, 0, 0, 0,
+		0, scale.y, 0, 0,
+		0, 0, scale.z, 0,
+		0, 0, 0, 1
+	);
 }
 Matrix4x4 MatrixRotationX(float Angle)
 {
-	return Matrix4x4();
+	float cosAng = cosf(Angle);
+	float sinAng = sinf(Angle);
+	return Matrix4x4(
+		1, 0, 0, 0,
+		0, cosAng, -sinAng, 0,
+		0, sinAng, cosAng, 0,
+		0, 0, 0, 1
+	);
 }
 Matrix4x4 MatrixRotationY(float Angle)
 {
-	return Matrix4x4();
+	float cosAng = cosf(Angle);
+	float sinAng = cosf(Angle);
+	return Matrix4x4(
+		cosAng, 0, sinAng, 0,
+		0, 1, 0, 0,
+		-sinAng, 0, cosAng, 0,
+		0, 0, 0, 1
+	);
 }
 Matrix4x4 MatrixRotationZ(float Angle)
 {
-	return Matrix4x4();
+	float cosAng = cosf(Angle);
+	float sinAng = sinf(Angle);
+	return Matrix4x4(
+		cosAng, -sinAng, 0, 0,
+		sinAng, cosAng, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
+	);
 }
