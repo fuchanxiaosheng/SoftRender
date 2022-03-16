@@ -61,8 +61,8 @@ public:
 
 	Vector3D operator-(const Vector3D& v) const;
 	Vector3D operator+(const Vector3D& v) const;
-	Vector3D operator*(float k);
-	Vector3D operator/(float k);
+	Vector3D operator*(float k) const;
+	Vector3D operator/(float k) const;
 
 	bool operator ==(const Vector3D& v) const;
 	bool operator !=(const Vector3D& v) const;
@@ -72,7 +72,7 @@ public:
 	Vector3D Normalize() const;
 };
 
-Vector3D operator*(float k, Vector3D& v);
+Vector3D operator*(float k,const Vector3D& v);
 double Dot(const Vector3D& v1, const Vector3D& v2);
 Vector3D Cross(const Vector3D& v1, const Vector3D& v2);
 Vector3D Lerp(Vector3D& v1, Vector3D& v2, float s);
@@ -109,7 +109,7 @@ public:
 	Vector4D Normalize() const;
 };
 
-Vector4D operator*(float k, Vector4D& v);
+Vector4D operator*(float k, const Vector4D& v);
 double Dot(const Vector4D& v1, const Vector4D& v2);
 Vector4D Lerp(Vector4D& v1, Vector4D& v2, float s);
 

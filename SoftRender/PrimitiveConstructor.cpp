@@ -23,6 +23,7 @@ void PrimitiveConstructor::LineDraw()
 			Color(psiVertices[triangles[i].VertexIndex[0]].pixelShaderIn.color.x, psiVertices[triangles[i].VertexIndex[0]].pixelShaderIn.color.y, psiVertices[triangles[i].VertexIndex[0]].pixelShaderIn.color.z, 1.0f)
 		);
 	}
+	drawBitmap(0, 0, viewport.wh.x, viewport.wh.y, frameBuffer);
 }
 
 void PrimitiveConstructor::DrawLine(Vector4D a, Vector4D b, Color c1, Color c2)
@@ -43,9 +44,8 @@ void PrimitiveConstructor::DrawLine(Vector4D a, Vector4D b, Color c1, Color c2)
 	double ir = (c1.r - c2.r) * rlength;
 	double ig = (c1.g - c2.g) * rlength;
 	double ib = (c1.b - c2.b) * rlength;
-	for (;;)
+	for (; startPoint.y >= 0 && startPoint.y < viewport.wh.y && startPoint.x >= 0 && startPoint.x < viewport.wh.x;)
 	{
-		setPixel(startPoint.x, startPoint.y, c);
 		frameBuffer[startPoint.y * viewport.wh.x + startPoint.x] = c;
 		if (startPoint == endPoint)
 			break;
@@ -85,6 +85,8 @@ void PrimitiveConstructor::TriangleDraw()
 	float t;
 	for (int i = 0; i < numOfTriangle; i++)
 	{
+		if (i == 2)
+			i = i;
 		float rz = 0;
 		VertexToPixel aData = psiVertices[triangles[i].VertexIndex[0]];
 		rz = aData.pixelShaderIn.vertexPosition.z != 0 ? 1.0f / aData.pixelShaderIn.vertexPosition.z : 0;
@@ -255,8 +257,8 @@ void PrimitiveConstructor::TriangleSample(VertexToPixel& p1, VertexToPixel& p2, 
 	else
 	{
 
-		leftIncrement = &(-(*(leftIncrement)));
-		rightIncrement = &(-(*(rightIncrement)));
+		*leftIncrement = -(*(leftIncrement));
+		*rightIncrement = -(*(rightIncrement));
 
 		m1dx = leftIncrement->vertexPosition.x;
 		m1dz = leftIncrement->vertexPosition.z;
@@ -309,7 +311,7 @@ void PrimitiveConstructor::TriangleSample(VertexToPixel& p1, VertexToPixel& p2, 
 					pIn.vertexPosition.x = i;
 					pIn.vertexPosition.y = yLine;
 					pIn.vertexPosition.z = current.pixelShaderIn.vertexPosition.z;
-					frameBuffer[yLine + i] = PixelShader(pIn);
+					frameBuffer[yLine + i] = PixelShader(pIn, this);
 				}
 				else
 				{
@@ -507,7 +509,7 @@ void PrimitiveConstructor::TriangleClip(ClipPlaneType type, Vector3D& normal, st
 	VertexToPixel data;
 	for (int i = 0; i < points.size(); i++)
 	{
-		int next = (i + 1) & points.size();
+		int next = (i + 1) % points.size();
 		v1 = points[i];
 		v2 = points[next];
 
@@ -600,14 +602,25 @@ void PrimitiveConstructor::SetVertexBuffer(int vertexNum, Vertex* v)
 {
 	numOfVertex = vertexNum;
 	backNumOfVertex = vertexNum;
-	vertices = (EndPoint*)malloc(sizeof(EndPoint) * numOfVertex);
 	for (int i = 0; i < numOfVertex; i++)
 	{
-		vertices[i].vertex.position = v[i].position;
-		vertices[i].vertex.color = v[i].color;
-		vertices[i].vertex.normal = v[i].normal;
-		vertices[i].vertex.texcoord = v[i].texcoord;
-		vertices[i].vertex.tangent = v[i].tangent;
+		Vertex vertex;
+		vertex.position = v[i].position;
+		vertex.color = v[i].color;
+		vertex.normal = v[i].normal;
+		vertex.texcoord = v[i].texcoord;
+		vertex.tangent = v[i].tangent;
+		vertices.push_back(vertex);
+	}
+}
+
+void PrimitiveConstructor::SetVertexBuffer(std::vector<Vertex> vs)
+{
+	numOfVertex = vs.size();
+	backNumOfVertex = vs.size();
+	for (int i = 0; i < numOfVertex; i++)
+	{	
+		vertices.push_back(vs[i]);
 	}
 }
 void PrimitiveConstructor::SetIndexBuffer(int indexNum, int* indices)
@@ -624,6 +637,16 @@ void PrimitiveConstructor::SetIndexBuffer(int indexNum, int* indices)
 	}
 }
 
+void PrimitiveConstructor::SetIndexBuffer(std::vector<Triangle> ts)
+{
+	numOfTriangle = ts.size();
+	for (int i = 0; i < numOfTriangle; i++)
+	{
+		triangles.push_back(ts[i]);
+		backUpTriangles.push_back(ts[i]);
+	}
+}
+
 void PrimitiveConstructor::ExecVertexSahder()
 {
 	psiVertices.clear();
@@ -631,12 +654,12 @@ void PrimitiveConstructor::ExecVertexSahder()
 	for (int i = 0; i < numOfVertex; i++)
 	{
 		VertexShaderIn vIn;
-		vIn.position = vertices[i].vertex.position;
-		vIn.texCoord = vertices[i].vertex.texcoord;
-		vIn.normal = vertices[i].vertex.normal;
-		vIn.color = vertices[i].vertex.color;
-		vIn.tangent = vertices[i].vertex.tangent;
-		PixelShaderIn vOut = VertexShader(vIn);
+		vIn.position = vertices[i].position;
+		vIn.texCoord = vertices[i].texcoord;
+		vIn.normal = vertices[i].normal;
+		vIn.color = vertices[i].color;
+		vIn.tangent = vertices[i].tangent;
+		PixelShaderIn vOut = VertexShader(vIn, this);
 		VertexToPixel passData;
 		passData.pixelShaderIn = vOut;
 		psiVertices.push_back(passData);

@@ -9,6 +9,8 @@ class MeshLoader
 public:
 	//only process triangle primitive
 	bool Load(const char* filename);
+	std::vector<Vertex>& GetVertices();
+	std::vector<Triangle>& GetTriangles();
 
 private:
 	std::vector<Vertex> vertices;

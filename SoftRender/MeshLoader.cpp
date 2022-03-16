@@ -82,3 +82,12 @@ bool MeshLoader::Load(const char* filename)
 
 	return true;
 }
+
+std::vector<Vertex>& MeshLoader::GetVertices()
+{
+	return vertices;
+}
+std::vector<Triangle>& MeshLoader::GetTriangles()
+{
+	return triangles;
+}

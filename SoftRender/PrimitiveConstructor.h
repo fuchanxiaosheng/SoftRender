@@ -39,16 +39,17 @@ public:
 	Vector4D color;
 	Vector3D tangent;
 
-	PixelShaderIn& operator-()
+	PixelShaderIn operator-()
 	{
-		texCoord = -texCoord;
-		vertexPosition = -vertexPosition;
-		normal = -normal;
-		color = -color;
-		tangent = -tangent;
-		viewPosition = viewPosition;
-		directionLightDirection = directionLightDirection;
-		return *this;
+		PixelShaderIn ret;
+		ret.texCoord = -texCoord;
+		ret.vertexPosition = -vertexPosition;
+		ret.normal = -normal;
+		ret.color = -color;
+		ret.tangent = -tangent;
+		ret.viewPosition = viewPosition;
+		ret.directionLightDirection = directionLightDirection;
+		return ret;
 	}
 };
 
@@ -97,22 +98,28 @@ public:
 	float* depthBuffer;
 	std::vector<VertexToPixel> psiVertices;
 
-	PixelShaderIn(*VertexShader)(VertexShaderIn);
-	PixelColor(*PixelShader)(PixelShaderIn);
+	std::vector<Matrix4x4> matrixs;
+	std::vector<Vector3D> vec3s;
+	std::vector<TextureSampler*> samplers;
+
+	PixelShaderIn(*VertexShader)(VertexShaderIn, void*);
+	PixelColor(*PixelShader)(PixelShaderIn, void*);
 
 	void(*setPixel)(int, int, PixelColor);
 	void(*drawBitmap)(int, int, int, int, const void*);
 
 	ViewPort viewport;
-	EndPoint* vertices;
+	
 
 	void SetVertexBuffer(int vertexNum, Vertex* vertices);
+	void SetVertexBuffer(std::vector<Vertex> vertices);
 	void SetIndexBuffer(int indexNum, int* indices);
+	void SetIndexBuffer(std::vector<Triangle> triangles);
 	void BackCull();
 	void Clip();
 	void PersDivide();
 
-private:
+
 	void ExecVertexSahder();
 	void DrawLine(Vector4D startPoint, Vector4D endPoint, Color c1, Color c2);
 
@@ -125,6 +132,7 @@ private:
 private:
 	std::vector<Triangle> triangles;
 	std::vector<Triangle> backUpTriangles;
+	std::vector<Vertex> vertices;
 	int backNumOfVertex;
 	int numOfTriangle;
 	int numOfVertex;
