@@ -76,7 +76,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		BitBlt(g_phdc, 0, 0, pTextureSampler->width, pTextureSampler->height, hdcMem, 0, 0, SRCCOPY);
 		DeleteDC(hdcMem);*/
 		SetWindowText(hWnd, std::to_string(g_pTimer->TimeTick()).c_str());
-		*pWorld = (*pWorld) * MatrixRotationY(g_pTimer->TimeMask());
+		//*pWorld = (*pWorld) * MatrixRotationY(g_pTimer->TimeMask());
 		pContructor->matrixs[0] = (*pProject) * ((*pView) * (*pWorld));
 		pContructor->ExecVertexSahder();
 		pContructor->BackCull();
@@ -96,11 +96,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+void GetProjectPath()
+{
+
+}
+
 int main()
 {
+	/*char szFileName[256];
+	memset(szFileName, '0', sizeof(szFileName));
+	GetModuleFileName(NULL, szFileName, sizeof(szFileName));
+	std::string path = szFileName;
+	std::string projectPath = path.substr(0, path.find("SoftRender") + 10);
+	std::string textureFilePath = projectPath + std::string("\\SoftRender\\resource\\sample.dds");
+	std::string objPath = projectPath + std::string("\\SoftRender\\resource\\test.obj");
+
 	TextureSampler textureSampler;
-	//textureSampler.LoadDDSTexture(L"D://Files//CodeProject//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
-	textureSampler.LoadDDSTexture(L"C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//sample_1920¡Á1280.dds");
+	int len = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)textureFilePath.c_str(), -1, NULL, 0);
+	wchar_t* wszUtf8 = new wchar_t[len + 1];
+	memset(wszUtf8, 0, len * 2 + 2);
+	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)textureFilePath.c_str(), -1, (LPWSTR)wszUtf8, len);
+	std::wstring wPath = wszUtf8;
+	delete[] wszUtf8;
+	textureSampler.LoadDDSTexture(wPath.c_str());
+	pTextureSampler = &textureSampler;*/
+
+	TextureSampler textureSampler;
+	textureSampler.LoadDDSTexture(L"resource\\sample.dds");
 	pTextureSampler = &textureSampler;
 
 
@@ -138,8 +160,7 @@ int main()
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 
 	MeshLoader meshLoader;
-	//meshLoader.Load("D://Files//CodeProject//SoftRender//SoftRender//resource//test.obj");
-	meshLoader.Load("C://Users//21166//Desktop//Work//CodeProjects//SoftRender//SoftRender//resource//test.obj");
+	meshLoader.Load("resource\\test.obj");
 
 	PrimitiveConstructor p;
 	pContructor = &p;
